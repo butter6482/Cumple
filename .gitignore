@@ -1,0 +1,6 @@
+node_modules/
+test-results/
+playwright-report/
+# La canción tiene derechos de autor: no subirla a un repo público (ver README).
+audio/*.mp3
+.DS_Store

@@ -1,61 +1,211 @@
-<html>
-
+<!doctype html>
+<html lang="es">
 <head>
-    <title>Happy Birthday</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f7c6d3">
+  <title>Una sorpresa para Amanda ✨</title>
+  <meta name="description" content="Una pequeña sorpresa para ti, Amanda...">
+  <meta property="og:title" content="Una pequeña sorpresa para ti ✨">
+  <meta property="og:description" content="Ábrelo cuando tengas un momento.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500&family=Parisienne&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="loader">
-                <button id="play">Start</button>
-            </div>
+  <!-- Gradientes compartidos por todos los lirios -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-petal-pink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="-92">
+        <stop offset="0" stop-color="#d9487c"/>
+        <stop offset=".45" stop-color="#f4a3bf"/>
+        <stop offset=".85" stop-color="#fde3ec"/>
+        <stop offset="1" stop-color="#fff7f9"/>
+      </linearGradient>
+      <linearGradient id="g-petal-white" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="-92">
+        <stop offset="0" stop-color="#cfe3b8"/>
+        <stop offset=".3" stop-color="#fbe6ee"/>
+        <stop offset=".75" stop-color="#fffdf9"/>
+        <stop offset="1" stop-color="#ffffff"/>
+      </linearGradient>
+      <linearGradient id="g-sheen" gradientUnits="userSpaceOnUse" x1="-20" y1="-20" x2="20" y2="-80">
+        <stop offset="0" stop-color="#bff3ee" stop-opacity="0"/>
+        <stop offset=".5" stop-color="#c9f1ff" stop-opacity=".45"/>
+        <stop offset="1" stop-color="#ffe3f6" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="g-glow">
+        <stop offset="0" stop-color="#fff1c9" stop-opacity=".9"/>
+        <stop offset="1" stop-color="#ffd59a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+  </svg>
+
+  <div class="backdrop" aria-hidden="true">
+    <div class="bg bg-pink"></div>
+    <div class="bg bg-garden"></div>
+    <div class="bg bg-gold"></div>
+    <div class="bg bg-matcha"></div>
+    <div class="bg bg-night"><div class="water"></div></div>
+    <div class="bg bg-dusk"></div>
+  </div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="audio-controls" hidden>
+    <button class="icon-btn" id="btn-play" type="button" aria-label="Pausar música">
+      <svg viewBox="0 0 24 24" class="i-pause"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+      <svg viewBox="0 0 24 24" class="i-play"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-mute" type="button" aria-label="Silenciar música" aria-pressed="false">
+      <svg viewBox="0 0 24 24" class="i-vol"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" class="i-muted"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <nav class="progress" aria-hidden="true"></nav>
+
+  <main id="stage">
+    <!-- Bloqueo por fecha -->
+    <section class="scene scene-gate" data-scene="gate" aria-label="Cuenta regresiva">
+      <div class="gate-lily" data-lily="pink"></div>
+      <h1 class="title-serif" data-text="gateTitle"></h1>
+      <p class="subtitle" data-text="gateSubtitle"></p>
+      <p class="countdown" id="countdown" aria-live="polite">--:--:--</p>
+    </section>
+
+    <!-- 1. Bienvenida -->
+    <section class="scene scene-intro" data-scene="intro" aria-label="Bienvenida">
+      <div class="intro-inner">
+        <span class="kicker">✦ ✦ ✦</span>
+        <h1 class="title-serif reveal" data-text="introTitle"></h1>
+        <button class="btn btn-primary reveal" type="button" data-action="start"><span data-text="introButton"></span></button>
+      </div>
+    </section>
+
+    <!-- 2. Jardín -->
+    <section class="scene scene-garden" data-scene="garden" aria-label="Jardín de lirios">
+      <div class="garden-text" aria-live="polite">
+        <p class="line line-1 title-serif" data-text="garden1"></p>
+        <p class="line line-2 title-serif italic" data-text="garden2"></p>
+      </div>
+      <div class="garden" id="garden"></div>
+      <button class="btn btn-ghost next-btn" type="button" data-action="next"><span data-text="next"></span></button>
+    </section>
+
+    <!-- 3. Cumpleaños -->
+    <section class="scene scene-birthday" data-scene="birthday" aria-label="Feliz cumpleaños">
+      <div class="frame" id="frame"></div>
+      <div class="bday-inner">
+        <h1 class="bday-title" id="bday-title" data-text="birthdayTitle"></h1>
+        <p class="bday-sub reveal" data-text="birthdaySubtitle"></p>
+      </div>
+      <button class="btn btn-ghost next-btn" type="button" data-action="next"><span data-text="next"></span></button>
+    </section>
+
+    <!-- 4. Matcha -->
+    <section class="scene scene-matcha" data-scene="matcha" aria-label="Matcha">
+      <p class="hint" id="matcha-hint" data-text="matchaHint"></p>
+      <button class="matcha" id="matcha" type="button" aria-label="Tocar el matcha latte">
+        <svg viewBox="0 0 200 320" aria-hidden="true">
+          <defs>
+            <clipPath id="cup-clip"><path d="M42 70 L158 70 L146 292 Q145 302 135 302 L65 302 Q55 302 54 292 Z"/></clipPath>
+            <linearGradient id="g-matcha" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#a8cc8a"/><stop offset="1" stop-color="#7fae67"/>
+            </linearGradient>
+            <linearGradient id="g-milk" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f6f1e2"/><stop offset="1" stop-color="#fffaf0"/>
+            </linearGradient>
+            <linearGradient id="g-mixed" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#c5dca8"/><stop offset="1" stop-color="#e3edc9"/>
+            </linearGradient>
+            <linearGradient id="g-glass" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".18" stop-color="#fff" stop-opacity=".08"/>
+              <stop offset=".8" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="100" cy="308" rx="62" ry="8" fill="#5e7f52" opacity=".18"/>
+          <!-- pajita -->
+          <rect class="straw" x="112" y="10" width="13" height="250" rx="6" fill="#f2a7c0" transform="rotate(12 118 140)"/>
+          <rect x="112" y="10" width="4" height="250" rx="2" fill="#fff" opacity=".45" transform="rotate(12 118 140)"/>
+          <g clip-path="url(#cup-clip)">
+            <g class="liquid">
+              <rect x="30" y="185" width="140" height="130" fill="url(#g-milk)"/>
+              <rect class="matcha-layer" x="30" y="112" width="140" height="78" fill="url(#g-matcha)"/>
+              <path class="swirl" d="M30 186 Q65 172 100 186 T170 186 V200 H30 Z" fill="#cfe0b2" opacity=".8"/>
+              <rect class="mixed-layer" x="30" y="112" width="140" height="200" fill="url(#g-mixed)"/>
+              <g class="ice">
+                <rect x="62" y="104" width="34" height="32" rx="7" fill="#fff" opacity=".5" transform="rotate(-12 79 120)"/>
+                <rect x="100" y="124" width="30" height="28" rx="7" fill="#fff" opacity=".45" transform="rotate(16 115 138)"/>
+                <rect x="74" y="150" width="28" height="26" rx="6" fill="#fff" opacity=".35" transform="rotate(8 88 163)"/>
+              </g>
+              <g class="bubbles" fill="#fff">
+                <circle cx="70" cy="280" r="3"/><circle cx="96" cy="292" r="2.2"/><circle cx="122" cy="284" r="2.8"/>
+                <circle cx="84" cy="296" r="1.8"/><circle cx="134" cy="294" r="2"/>
+              </g>
+            </g>
+          </g>
+          <path d="M42 70 L158 70 L146 292 Q145 302 135 302 L65 302 Q55 302 54 292 Z" fill="url(#g-glass)" stroke="#fff" stroke-opacity=".85" stroke-width="2.5"/>
+          <ellipse cx="100" cy="70" rx="58" ry="7" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2.5"/>
+          <path d="M58 90 L66 270" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span class="matcha-pop" aria-hidden="true">🍃</span>
+      </button>
+      <p class="matcha-msg title-serif" id="matcha-msg" aria-live="polite" data-text="matchaMessage"></p>
+      <p class="matcha-sip" id="matcha-sip" aria-live="polite"></p>
+      <button class="btn btn-ghost next-btn" type="button" data-action="next"><span data-text="next"></span></button>
+    </section>
+
+    <!-- 5. Luces flotantes -->
+    <section class="scene scene-lights" data-scene="lights" aria-label="Luces flotantes">
+      <h2 class="lights-title title-serif italic" data-text="lightsTitle"></h2>
+      <div class="glow-lilies" id="glow-lilies"></div>
+      <div class="lights-actions">
+        <button class="btn btn-glass" type="button" id="wish-btn"><span data-text="wishButton"></span></button>
+        <p class="wish-msg" id="wish-msg" aria-live="polite"></p>
+        <button class="btn btn-ghost light" type="button" data-action="next"><span data-text="next"></span></button>
+      </div>
+    </section>
+
+    <!-- 6. Carta -->
+    <section class="scene scene-letter" data-scene="letter" aria-label="Una carta para Amanda">
+      <p class="hint" id="env-hint" data-text="envelopeHint"></p>
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir la carta">
+        <div class="env-back"></div>
+        <div class="env-paper"><span data-text="envelopeLabel"></span></div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal" data-lily="seal"></div>
+      </div>
+      <div class="letter-card" id="letter-card" role="dialog" aria-modal="false" aria-label="Carta" hidden>
+        <div class="letter-paper">
+          <div class="letter-lily" data-lily="pink"></div>
+          <p class="letter-text" id="letter-text"></p>
+          <button class="btn btn-primary" type="button" data-action="next"><span data-text="next"></span></button>
         </div>
-    </div>
-    <audio class="song" controls loop>
-        <source src="music.mp3">
-        </source>
-        Your browser isn't invited for super fun audio time.
-    </audio>
-    <canvas id="confetti"></canvas>
-    <div class="main">
-        <div class="container pt-5">
-            <div class="row">
+      </div>
+    </section>
 
-                <div class="col-12 col-xl-6 mx-auto">
-                    <img src="img/banner.png" alt="">
-                </div>
+    <!-- 7. Final -->
+    <section class="scene scene-finale" data-scene="finale" aria-label="Final">
+      <div class="planted" id="planted" aria-hidden="true"></div>
+      <h1 class="finale-title reveal" data-text="finaleTitle"></h1>
+      <div class="bouquet" id="bouquet"></div>
+      <p class="hint small reveal" data-text="finaleHint"></p>
+      <div class="finale-actions reveal">
+        <button class="btn btn-primary" type="button" data-action="replay"><span data-text="replayButton"></span></button>
+        <button class="btn btn-ghost" type="button" data-action="postcard"><span data-text="postcardButton"></span></button>
+      </div>
+    </section>
+  </main>
 
-                <div class="col-12  text-center">
-                    <div id="name" class="area">Gaurav</div>
-                </div>
+  <audio id="song" preload="metadata" loop playsinline></audio>
 
-                <div class="col-12 text-center">
-                    <div class="type-wrap">
-                        <div id="typed-strings" class="typing">
-                            <h2>Happy Birthday <i id="nae">Gaurav</i></h2>
-                            <h2>Have a wonderful day</h2>
-                            <h2>Filled with joy and happiness.</h2>
-                        </div>
-                        <span id="typed" style="white-space:pre;"></span>
-                    </div>
-                </div>
-
-                <div class="col-12 col-xl-3 cake">
-                    <img src="img/cake.gif" alt="">
-                </div>
-            </div>
-        </div>
-        <img src="img/Balloon-Border.png" width="100%" class="balloon-border">
-    </div>
+  <script src="config.js"></script>
+  <script src="fx.js"></script>
+  <script src="app.js"></script>
 </body>
-<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/typed.min.js"></script>
-<script src="js/script.js"></script>
-
 </html>
